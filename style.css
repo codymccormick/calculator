@@ -1,0 +1,14 @@
+.title {
+    text-align: center;
+    padding-bottom: 30px;
+    text-decoration: underline;
+    font-size: 30px;
+    font-weight: bold;
+}
+
+.calculator {
+    display: grid;
+    grid-template-columns: repeat(3, 40px);
+    justify-content: center;
+    gap: 10px;
+}
