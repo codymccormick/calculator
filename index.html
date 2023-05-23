@@ -4,29 +4,32 @@
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=edge" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Calculator</title>
+    <title>Draculator</title>
     <link rel="stylesheet" href="style.css" />
     <script src="script.js" defer></script>
   </head>
   <body>
+    <h1 id="title">Draculator</h1>
+    <h2 id="subtitle">A dracula themed calculator</h2>
     <div class="calculator">
-      <div id="display"></div>
+      <div id="display">0</div>
       <button class="number">1</button>
       <button class="number">2</button>
       <button class="number">3</button>
+      <button class="operator">/</button>
       <button class="number">4</button>
       <button class="number">5</button>
       <button class="number">6</button>
+      <button class="operator">x</button>
       <button class="number">7</button>
       <button class="number">8</button>
       <button class="number">9</button>
-      <button class="operator">+</button>
-      <button class="number">0</button>
-      <button class="operator">x</button>
       <button class="operator">-</button>
+      <button id="zero" class="number">0</button>
       <button id="decimal">.</button>
-      <button class="operator">/</button>
-      <button id="clear">C</button>
+      <button class="operator">+</button>
+      <button id="clear">AC</button>
+      <button id="delete">Del</button>
       <button id="calculate">=</button>
     </div>
   </body>
