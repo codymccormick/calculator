@@ -102,14 +102,13 @@ deleteButton.addEventListener("click", function () {
   if (currentNumber === "" && operator) {
     operator = undefined;
     display.textContent = num1;
+    currentNumber = num1;
   } else if (currentNumber !== "") {
     currentNumber = currentNumber.slice(0, -1);
 
     if (operator && num2) {
       num2 = currentNumber;
       display.textContent = `${num1} ${operator} ${num2}`;
-    } else if (operator && !num2) {
-      display.textContent = `${num1} ${operator}`;
     } else {
       num1 = currentNumber;
       display.textContent = num1;
