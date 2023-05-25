@@ -27,7 +27,7 @@ const calculate = (num1, num2, operator) => {
       return multiplication(num1, num2);
     case "/":
       if (num1 == 0 || num2 == 0) {
-        return "Error";
+        return "Error!";
       } else {
         return division(num1, num2);
       }
@@ -61,6 +61,12 @@ for (let button of numberButtons) {
 
 for (let button of operatorButtons) {
   button.addEventListener("click", function () {
+    if (!num1 && !operator){
+      reset();
+      return
+    } else if (operator){
+      return
+    }
     if (num1 && num2) {
       result = calculate(num1, num2, operator);
       display.textContent = result;
@@ -76,7 +82,7 @@ for (let button of operatorButtons) {
 
 calculateButton.addEventListener("click", function () {
   if (!num2) {
-    reset();
+    return;
   }
   result = calculate(num1, num2, operator);
   display.textContent = result;
