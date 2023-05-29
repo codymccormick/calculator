@@ -50,18 +50,26 @@ body {
 }
 
 #display {
+  display: flex;
+  flex-direction: column;
   background-color: #f8f8f2;
   grid-column: span 4;
-  height: 25px;
+  height: 45px;
   border: 2px solid #44475a;
   padding: 10px;
   border-radius: 4px;
   color: #282a36;
   margin-bottom: 8px;
+}
+
+#typedNumber {
+  align-self: flex-end;
   font-size: 2em;
-  display: flex;
-  align-items: center;
-  justify-content: flex-end;
+}
+
+#equation {
+  align-self: flex-end;
+  font-size: 1em;
 }
 
 .operator {

@@ -1,10 +1,12 @@
-let num1 = undefined;
-let num2 = undefined;
+let operand1 = undefined;
+let operand2 = undefined;
 let operator = undefined;
-let result = undefined;
+let calculationResult = undefined;
 let currentNumber = "";
 
 const display = document.getElementById("display");
+const typedNumber = document.getElementById("typedNumber");
+const equation = document.getElementById("equation");
 const numberButtons = document.getElementsByClassName("number");
 const operatorButtons = document.getElementsByClassName("operator");
 const calculateButton = document.getElementById("calculate");
@@ -12,83 +14,77 @@ const clearButton = document.getElementById("clear");
 const decimalButton = document.getElementById("decimal");
 const deleteButton = document.getElementById("delete");
 
-const addition = (num1, num2) => parseFloat(num1) + parseFloat(num2);
-const subtraction = (num1, num2) => parseFloat(num1) - parseFloat(num2);
-const multiplication = (num1, num2) => parseFloat(num1) * parseFloat(num2);
-const division = (num1, num2) => parseFloat(num1) / parseFloat(num2);
+const operations = {
+  "+": (operand1, operand2) => parseFloat(operand1) + parseFloat(operand2),
+  "-": (operand1, operand2) => parseFloat(operand1) - parseFloat(operand2),
+  x: (operand1, operand2) => parseFloat(operand1) * parseFloat(operand2),
+  "/": (operand1, operand2) => {
+    if (operand1 == 0 || operand2 == 0) {
+      return "Error";
+    } else {
+      return parseFloat(operand1) / parseFloat(operand2);
+    }
+  },
+};
 
-const calculate = (num1, num2, operator) => {
-  switch (operator) {
-    case "+":
-      return addition(num1, num2);
-    case "-":
-      return subtraction(num1, num2);
-    case "x":
-      return multiplication(num1, num2);
-    case "/":
-      if (num1 == 0 || num2 == 0) {
-        return "Error!";
-      } else {
-        return division(num1, num2);
-      }
+const updateDisplay = (text) => {
+  if (operand2) {
+    equation.textContent = `${operand1} ${operator} ${operand2}`;
+  } else if (operator) {
+    equation.textContent = `${operand1} ${operator}`;
   }
+  typedNumber.textContent = text;
 };
 
 const reset = () => {
-  num1 = undefined;
-  num2 = undefined;
+  operand1 = undefined;
+  operand2 = undefined;
   operator = undefined;
   currentNumber = "";
-  display.textContent = "0";
+  updateDisplay("0");
+  equation.textContent = "";
 };
 
 for (let button of numberButtons) {
   button.addEventListener("click", function () {
-    if (num1 === result && !operator) {
+    if (operand1 === calculationResult && !operator) {
       reset();
+    } else if (currentNumber.length === 10) {
+      return;
     }
-    const number = this.innerText;
-    currentNumber += number;
+    currentNumber += this.innerText;
     if (operator) {
-      num2 = currentNumber;
-      display.textContent = `${num1} ${operator} ${num2}`;
+      operand2 = currentNumber;
+      updateDisplay(operand2);
     } else {
-      num1 = currentNumber;
-      display.textContent = num1;
+      operand1 = currentNumber;
+      updateDisplay(operand1);
     }
   });
 }
 
 for (let button of operatorButtons) {
   button.addEventListener("click", function () {
-    if (!num1 && !operator){
-      reset();
-      return
-    } else if (operator){
-      return
-    }
-    if (num1 && num2) {
-      result = calculate(num1, num2, operator);
-      display.textContent = result;
-      num1 = result;
-      num2 = undefined;
-      operator = undefined;
+    if (operand1 && operand2) {
+      calculationResult = operations[operator](operand1, operand2);
+      updateDisplay(calculationResult);
+      resetValuesAfterCalculation(calculationResult);
     }
     operator = this.innerText;
-    display.textContent += " " + this.textContent;
     currentNumber = "";
+    updateDisplay(currentNumber);
   });
 }
 
 calculateButton.addEventListener("click", function () {
-  if (!num2) {
-    return;
+  if (!operand2) {
+    reset();
+  } else {
+    calculationResult = operations[operator](operand1, operand2);
+    updateDisplay(calculationResult);
+    resetValuesAfterCalculation(calculationResult);
+    equation.textContent = "";
   }
-  result = calculate(num1, num2, operator);
-  display.textContent = result;
-  num1 = result;
-  num2 = undefined;
-  operator = undefined;
 });
 
 clearButton.addEventListener("click", reset);
@@ -97,9 +93,9 @@ decimalButton.addEventListener("click", function () {
   if (!currentNumber.includes(".")) {
     currentNumber += ".";
     if (operator) {
-      display.textContent = `${num1} ${operator} ${currentNumber}`;
+      updateDisplay(`${operand1} ${operator} ${currentNumber}`);
     } else {
-      display.textContent = currentNumber;
+      updateDisplay(currentNumber);
     }
   }
 });
@@ -107,17 +103,23 @@ decimalButton.addEventListener("click", function () {
 deleteButton.addEventListener("click", function () {
   if (currentNumber === "" && operator) {
     operator = undefined;
-    display.textContent = num1;
-    currentNumber = num1;
+    updateDisplay(operand1);
+    currentNumber = operand1;
   } else if (currentNumber !== "") {
     currentNumber = currentNumber.slice(0, -1);
 
-    if (operator && num2) {
-      num2 = currentNumber;
-      display.textContent = `${num1} ${operator} ${num2}`;
+    if (operator && operand2) {
+      operand2 = currentNumber;
+      updateDisplay(`${operand1} ${operator} ${operand2}`);
     } else {
-      num1 = currentNumber;
-      display.textContent = num1;
+      operand1 = currentNumber;
+      updateDisplay(operand1);
     }
   }
 });
+
+const resetValuesAfterCalculation = (calculationResult) => {
+  operand1 = calculationResult;
+  operand2 = undefined;
+  operator = undefined;
+};
