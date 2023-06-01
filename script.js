@@ -18,7 +18,8 @@ const deleteButton = document.getElementById("delete");
 
 // Define operation functions for calculator
 const operations = {
-  "%": (operand1, operand2) => parseFloat(operand1/100)  * parseFloat(operand2),
+  "%": (operand1, operand2) =>
+    parseFloat(operand1 / 100) * parseFloat(operand2),
   "+": (operand1, operand2) => parseFloat(operand1) + parseFloat(operand2),
   "-": (operand1, operand2) => parseFloat(operand1) - parseFloat(operand2),
   "*": (operand1, operand2) => parseFloat(operand1) * parseFloat(operand2),
@@ -117,5 +118,37 @@ deleteButton.addEventListener("click", function () {
       operand1 = currentNumber;
       updateDisplay(operand1);
     }
+  }
+});
+
+// Keyboard Support
+
+function clickButton(buttons, value) {
+  const button = Array.from(buttons).find(
+    (button) => button.textContent === value
+  );
+  if (button) button.click();
+}
+
+document.addEventListener("keydown", function (event) {
+  const key = event.key;
+
+  if (!isNaN(key)) {
+    clickButton(numberButtons, key);
+  } else if (["%", "+", "-", "*", "/"].includes(key)) {
+    clickButton(operatorButtons, key);
+    event.preventDefault()
+  }
+
+  if (key === "Enter") {
+    calculateButton.click();
+  }
+
+  if (key === "Backspace") {
+    deleteButton.click();
+  }
+
+  if (key === ".") {
+    decimalButton.click();
   }
 });
