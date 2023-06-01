@@ -15,12 +15,13 @@ const decimalButton = document.getElementById("decimal");
 const deleteButton = document.getElementById("delete");
 
 const operations = {
+  "%": (operand1, operand2) => parseFloat(operand1) % parseFloat(operand2),
   "+": (operand1, operand2) => parseFloat(operand1) + parseFloat(operand2),
   "-": (operand1, operand2) => parseFloat(operand1) - parseFloat(operand2),
-  x: (operand1, operand2) => parseFloat(operand1) * parseFloat(operand2),
+  "*": (operand1, operand2) => parseFloat(operand1) * parseFloat(operand2),
   "/": (operand1, operand2) => {
-    if (operand1 == 0 || operand2 == 0) {
-      return "Error";
+    if (operand2 == 0) {
+      return "Error!";
     } else {
       return parseFloat(operand1) / parseFloat(operand2);
     }
@@ -28,31 +29,36 @@ const operations = {
 };
 
 const updateDisplay = (text) => {
-  if (operand2) {
-    equation.textContent = `${operand1} ${operator} ${operand2}`;
-  } else if (operator) {
-    equation.textContent = `${operand1} ${operator}`;
-  }
-  typedNumber.textContent = text;
+  equation.textContent = operator
+    ? `${formatNumber(operand1)} ${operator}`
+    : "";
+  typedNumber.textContent = formatNumber(text);
 };
+
+const formatNumber = (num) =>
+  num.toString().length > 10 ? num.toExponential(4) : num;
 
 const reset = () => {
-  operand1 = undefined;
-  operand2 = undefined;
-  operator = undefined;
+  [operand1, operand2, operator] = [undefined, undefined, undefined];
   currentNumber = "";
-  updateDisplay("0");
   equation.textContent = "";
+  updateDisplay("0");
 };
 
-for (let button of numberButtons) {
+const performOperation = () => {
+  if (!operand1 || !operand2) return;
+  calculationResult = formatNumber(operations[operator](operand1, operand2));
+  updateDisplay(calculationResult);
+  [operand1, operand2, operator] = [calculationResult, undefined, undefined];
+};
+
+Array.from(numberButtons).forEach((button) => {
   button.addEventListener("click", function () {
-    if (operand1 === calculationResult && !operator) {
-      reset();
-    } else if (currentNumber.length === 10) {
-      return;
-    }
+    if (operand1 === calculationResult && !operator) reset();
+    if (currentNumber.length === 10) return;
+
     currentNumber += this.innerText;
+
     if (operator) {
       operand2 = currentNumber;
       updateDisplay(operand2);
@@ -61,30 +67,20 @@ for (let button of numberButtons) {
       updateDisplay(operand1);
     }
   });
-}
+});
 
-for (let button of operatorButtons) {
+Array.from(operatorButtons).forEach((button) => {
   button.addEventListener("click", function () {
-    if (operand1 && operand2) {
-      calculationResult = operations[operator](operand1, operand2);
-      updateDisplay(calculationResult);
-      resetValuesAfterCalculation(calculationResult);
-    }
+    performOperation();
     operator = this.innerText;
     currentNumber = "";
     updateDisplay(currentNumber);
   });
-}
+});
 
 calculateButton.addEventListener("click", function () {
-  if (!operand2) {
-    reset();
-  } else {
-    calculationResult = operations[operator](operand1, operand2);
-    updateDisplay(calculationResult);
-    resetValuesAfterCalculation(calculationResult);
-    equation.textContent = "";
-  }
+  operand2 ? performOperation() : reset();
+  equation.textContent = "";
 });
 
 clearButton.addEventListener("click", reset);
@@ -92,11 +88,7 @@ clearButton.addEventListener("click", reset);
 decimalButton.addEventListener("click", function () {
   if (!currentNumber.includes(".")) {
     currentNumber += ".";
-    if (operator) {
-      updateDisplay(`${operand1} ${operator} ${currentNumber}`);
-    } else {
-      updateDisplay(currentNumber);
-    }
+    updateDisplay(currentNumber);
   }
 });
 
@@ -107,19 +99,19 @@ deleteButton.addEventListener("click", function () {
     currentNumber = operand1;
   } else if (currentNumber !== "") {
     currentNumber = currentNumber.slice(0, -1);
-
     if (operator && operand2) {
       operand2 = currentNumber;
-      updateDisplay(`${operand1} ${operator} ${operand2}`);
+      updateDisplay(operand2);
     } else {
       operand1 = currentNumber;
       updateDisplay(operand1);
     }
+    if (currentNumber === "" && operator) {
+      operator = undefined;
+      currentNumber = operand1;
+      operand1 = currentNumber;
+      updateDisplay(operand1);
+      equation.textContent = "";
+    }
   }
 });
-
-const resetValuesAfterCalculation = (calculationResult) => {
-  operand1 = calculationResult;
-  operand2 = undefined;
-  operator = undefined;
-};

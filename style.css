@@ -76,10 +76,6 @@ body {
   background-color: #ff79c6;
 }
 
-#zero {
-  grid-column: span 2;
-}
-
 #calculate {
   grid-column: span 2;
   background-color: #50fa7b;
