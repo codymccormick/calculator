@@ -72,25 +72,23 @@ body {
   font-size: 1em;
 }
 
-.operator {
+button.operator {
   background-color: #ff79c6;
 }
 
 #calculate {
   grid-column: span 2;
-  background-color: #50fa7b;
+  background-color: #ff79c6;
 }
 
 #calculate:hover {
   background-color: #8be9fd;
 }
 
-#clear,
-#decimal {
-  background-color: #8be9fd;
+#clear, #delete {
+  background-color: #50fa7b;
 }
 
-#clear:hover,
-#decimal:hover {
-  background-color: #50fa7b;
+#clear:hover, #delete:hover {
+  background-color: #8be9fd;
 }
