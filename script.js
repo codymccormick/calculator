@@ -104,13 +104,19 @@ decimalButton.addEventListener("click", function () {
 });
 
 deleteButton.addEventListener("click", function () {
-  if (currentNumber === "" && operator) {
+  if (calculationResult === operand1 || operand1.length === 1) {
+    reset();
+  }
+  if (currentNumber.length === 1 && operator) {
+    operand2 = undefined;
     operator = undefined;
-    updateDisplay(operand1);
     currentNumber = operand1;
+    operand1 = currentNumber;
+    updateDisplay(operand1);
     equation.textContent = "";
-  } else if (currentNumber !== "") {
+  } else if (currentNumber !== "" && calculationResult != operand1) {
     currentNumber = currentNumber.slice(0, -1);
+
     if (operator && operand2) {
       operand2 = currentNumber;
       updateDisplay(operand2);
@@ -137,11 +143,12 @@ document.addEventListener("keydown", function (event) {
     clickButton(numberButtons, key);
   } else if (["%", "+", "-", "*", "/"].includes(key)) {
     clickButton(operatorButtons, key);
-    event.preventDefault()
+    event.preventDefault();
   }
 
   if (key === "Enter") {
     calculateButton.click();
+    event.preventDefault();
   }
 
   if (key === "Backspace") {
