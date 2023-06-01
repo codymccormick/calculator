@@ -18,7 +18,7 @@ const deleteButton = document.getElementById("delete");
 
 // Define operation functions for calculator
 const operations = {
-  "%": (operand1, operand2) => parseFloat(operand1) % parseFloat(operand2),
+  "%": (operand1, operand2) => parseFloat(operand1/100)  * parseFloat(operand2),
   "+": (operand1, operand2) => parseFloat(operand1) + parseFloat(operand2),
   "-": (operand1, operand2) => parseFloat(operand1) - parseFloat(operand2),
   "*": (operand1, operand2) => parseFloat(operand1) * parseFloat(operand2),
