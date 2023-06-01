@@ -1,9 +1,11 @@
+// Initialize variables for calculator operations
 let operand1 = undefined;
 let operand2 = undefined;
 let operator = undefined;
 let calculationResult = undefined;
 let currentNumber = "";
 
+// Get DOM elements
 const display = document.getElementById("display");
 const typedNumber = document.getElementById("typedNumber");
 const equation = document.getElementById("equation");
@@ -14,6 +16,7 @@ const clearButton = document.getElementById("clear");
 const decimalButton = document.getElementById("decimal");
 const deleteButton = document.getElementById("delete");
 
+// Define operation functions for calculator
 const operations = {
   "%": (operand1, operand2) => parseFloat(operand1) % parseFloat(operand2),
   "+": (operand1, operand2) => parseFloat(operand1) + parseFloat(operand2),
@@ -28,6 +31,11 @@ const operations = {
   },
 };
 
+// Function to format number for display
+const formatNumber = (num) =>
+  num.toString().length > 10 ? num.toExponential(4) : num;
+
+// Function to update the display on the calculator
 const updateDisplay = (text) => {
   equation.textContent = operator
     ? `${formatNumber(operand1)} ${operator}`
@@ -35,9 +43,7 @@ const updateDisplay = (text) => {
   typedNumber.textContent = formatNumber(text);
 };
 
-const formatNumber = (num) =>
-  num.toString().length > 10 ? num.toExponential(4) : num;
-
+// Function to reset the calculator's state
 const reset = () => {
   [operand1, operand2, operator] = [undefined, undefined, undefined];
   currentNumber = "";
@@ -45,6 +51,7 @@ const reset = () => {
   updateDisplay("0");
 };
 
+// Function to perform an operation on the calculator
 const performOperation = () => {
   if (!operand1 || !operand2) return;
   calculationResult = formatNumber(operations[operator](operand1, operand2));
@@ -52,6 +59,7 @@ const performOperation = () => {
   [operand1, operand2, operator] = [calculationResult, undefined, undefined];
 };
 
+// Event handlers for number buttons
 Array.from(numberButtons).forEach((button) => {
   button.addEventListener("click", function () {
     if (operand1 === calculationResult && !operator) reset();
@@ -69,6 +77,7 @@ Array.from(numberButtons).forEach((button) => {
   });
 });
 
+// Event handlers for operator buttons
 Array.from(operatorButtons).forEach((button) => {
   button.addEventListener("click", function () {
     performOperation();
@@ -78,6 +87,7 @@ Array.from(operatorButtons).forEach((button) => {
   });
 });
 
+// Event handlers for special function buttons
 calculateButton.addEventListener("click", function () {
   operand2 ? performOperation() : reset();
   equation.textContent = "";
@@ -97,6 +107,7 @@ deleteButton.addEventListener("click", function () {
     operator = undefined;
     updateDisplay(operand1);
     currentNumber = operand1;
+    equation.textContent = "";
   } else if (currentNumber !== "") {
     currentNumber = currentNumber.slice(0, -1);
     if (operator && operand2) {
@@ -105,13 +116,6 @@ deleteButton.addEventListener("click", function () {
     } else {
       operand1 = currentNumber;
       updateDisplay(operand1);
-    }
-    if (currentNumber === "" && operator) {
-      operator = undefined;
-      currentNumber = operand1;
-      operand1 = currentNumber;
-      updateDisplay(operand1);
-      equation.textContent = "";
     }
   }
 });
